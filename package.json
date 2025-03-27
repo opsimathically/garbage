@@ -1,6 +1,6 @@
 {
   "name": "@opsimathically/garbage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Build random objects full of garbage, any kind of garbage, in any way. Useful for for fuzz testing code at runtime to see if unexpected outcomes can occur. ",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -99,6 +99,52 @@ function maybeProxy<T extends object>(target: T): T {
   });
 }
 
+function maybeProxySet<T>(
+  target: Set<T>,
+  handler: Partial<ProxyHandler<Set<T>>> = {}
+): Set<T> {
+  if (!randomBool()) return target;
+  // maybe proxy with bad set/get etc (this will cause things like set.add() to fail with errors)
+  if (!randomBool()) return maybeProxy(target);
+
+  const setTraps: ProxyHandler<Set<T>> = {
+    get(targetSet, prop, receiver) {
+      const value = Reflect.get(targetSet, prop, receiver);
+      if (typeof value === 'function') {
+        return (...args: any[]) => {
+          return (value as Function).apply(targetSet, args);
+        };
+      }
+      return value;
+    },
+    ...handler
+  };
+  return new Proxy(target, setTraps);
+}
+
+function maybeProxyMap<K, V>(
+  target: Map<K, V>,
+  handler: Partial<ProxyHandler<Map<K, V>>> = {}
+): Map<K, V> {
+  if (!randomBool()) return target;
+  // maybe proxy with bad values.
+  if (!randomBool()) return maybeProxy(target);
+  const mapTraps: ProxyHandler<Map<K, V>> = {
+    get(targetMap, prop, receiver) {
+      const value = Reflect.get(targetMap, prop, receiver);
+      if (typeof value === 'function') {
+        return (...args: any[]) => {
+          return (value as Function).apply(targetMap, args);
+        };
+      }
+      return value;
+    },
+    ...handler
+  };
+
+  return new Proxy(target, mapTraps);
+}
+
 function generateGarbage(
   depth = 0,
   visited = new WeakSet(),
@@ -152,7 +198,7 @@ function generateGarbage(
           generateGarbage(depth + 1, visited, history)
         );
       }
-      return maybeProxy(map);
+      return maybeProxyMap(map);
     },
     () => {
       const set = new Set<any>();
@@ -161,7 +207,7 @@ function generateGarbage(
       for (let i = 0; i < randomInt(4) + 1; i++) {
         set.add(generateGarbage(depth + 1, visited, history));
       }
-      return maybeProxy(set);
+      return maybeProxySet(set);
     },
     () => randomFunction(),
     () => randomBuffer(),
