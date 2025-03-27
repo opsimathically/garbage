@@ -1,6 +1,6 @@
 # garbage
 
-Generate garbage. What is garbage? Garbage is anything. Just objects, errors, proxies,
+Generate garbage. What is garbage? Garbage is anything. Just objects, errors, proxies, promises,
 typed arrays, symbols, anything really that you'd want to sanity-test with. Feed garbage
 to something and see how that-something behaves to fuzz out potential problems. Garbage depth
 is random, content is random, it's all random garbage.
@@ -21,7 +21,7 @@ clone this repo, enter directory, and run `npm install` for dev dependencies, th
 
 [See API Reference for documentation](https://github.com/opsimathically/garbage/blob/main/docs/)
 
-[See unit tests for more usage example](https://github.com/opsimathically/garbage/blob/main/test/objectsearch.test.ts)
+[See unit tests for a usage example](https://github.com/opsimathically/garbage/blob/main/test/garbage.test.ts)
 
 ```typescript
 import { generateRandomGarbage } from '@opsimathically/garbage';
